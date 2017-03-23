@@ -26,7 +26,7 @@ var upload = multer({storage: storage}); //配置(upload是一个中间件处理
 routers.get('/update',auth.checkLogin, function(req, res) {
     var id = req.query.id;
     articleModel.findById(id).populate('user').exec(function(err,article){
-        res.render('article/update',{title:'编辑页',article:article});
+        res.render('article/add',{title:'编辑页',article:article});
     })
 });
 
@@ -45,9 +45,7 @@ routers.post('/add', auth.checkLogin, upload.single('poster'), function (req, re
     articleInfo.user = req.session.user._id;
 
     if(articleInfo.id){
-        console.log(articleInfo)
         articleModel.findById(articleInfo.id,function(err,doc){
-            console.log(doc)
             if(!err){
                 articleInfo.poster || (articleInfo.poster = doc.poster);
                 articleModel.update({_id:articleInfo.id},{title:articleInfo.title,poster:articleInfo.poster,content:articleInfo.content},
